@@ -1,6 +1,7 @@
 #include "player.hpp"
-
-// TEST CHANGE -- DANA
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
 
 /*
  * Constructor for the player; initialize everything here. The side your AI is
@@ -16,13 +17,19 @@ Player::Player(Side side) {
      * precalculating things, etc.) However, remember that you will only have
      * 30 seconds.
      */
+    Board board = Board();
+    Side myside = side;
+    Side otherside;
+    if (myside == WHITE)
+    	otherside = BLACK;
+    else
+    	otherside = WHITE;
 }
 
 /*
  * Destructor for the player.
  */
 Player::~Player() {
-	//NEGROS
 }
 
 /*
@@ -43,5 +50,36 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-    return nullptr;
+	cerr << "hi gaiz" << endl;
+	vector <Move*> possible;
+	cerr << "bitch" << endl;
+	for (int i = 0; i < 8; i++)
+	{ 
+		cerr << "ass" << endl;
+		for (int j = 0; j < 8; j++)
+		{
+			cerr << "motha" << endl;
+			Move* move = new Move(i, j);
+			cerr << "fucka" << endl;
+			if (board.checkMove(move, myside))
+			{
+				cerr << "fuck" << endl;
+				possible.push_back(move);
+				cerr << "me" << endl;
+			}
+		}
+	}
+	cerr << "up" << endl;
+	cerr <<"size is " << possible.size() <<endl;
+	if (possible.size() == 0)
+	{
+		cerr << "Hello" << endl;
+		return nullptr;
+	}
+
+ // 	srand (time(NULL));
+ // 	int ran = rand() % possible.size();
+	Move* themove = possible[1];
+	//possible[ran];
+	return themove;
 }
