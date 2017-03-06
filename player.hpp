@@ -10,7 +10,7 @@ class Player {
 
 public:
     Player(Side side);
-    Board board;
+    Board *board;
     Side myside;
     Side otherside;
     ~Player();

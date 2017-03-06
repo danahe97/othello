@@ -17,9 +17,8 @@ Player::Player(Side side) {
      * precalculating things, etc.) However, remember that you will only have
      * 30 seconds.
      */
-    Board board = Board();
-    Side myside = side;
-    Side otherside;
+    board = new Board();
+    myside = side;
     if (myside == WHITE)
     	otherside = BLACK;
     else
@@ -50,36 +49,86 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-	cerr << "hi gaiz" << endl;
+
+	// process opponenet's move
+	board->doMove(opponentsMove, otherside);
+
+	// create vector of all possible moves
 	vector <Move*> possible;
-	cerr << "bitch" << endl;
 	for (int i = 0; i < 8; i++)
 	{ 
-		cerr << "ass" << endl;
 		for (int j = 0; j < 8; j++)
 		{
-			cerr << "motha" << endl;
 			Move* move = new Move(i, j);
-			cerr << "fucka" << endl;
-			if (board.checkMove(move, myside))
+			if (board->checkMove(move, myside))
 			{
-				cerr << "fuck" << endl;
 				possible.push_back(move);
-				cerr << "me" << endl;
 			}
 		}
 	}
-	cerr << "up" << endl;
-	cerr <<"size is " << possible.size() <<endl;
-	if (possible.size() == 0)
+
+	if (!board->hasMoves(myside))
 	{
-		cerr << "Hello" << endl;
 		return nullptr;
 	}
 
- // 	srand (time(NULL));
- // 	int ran = rand() % possible.size();
-	Move* themove = possible[1];
-	//possible[ran];
+	// heuristic function
+	int maxscore = 0;
+	Move* themove;
+	for (unsigned int i = 0; i < possible.size(); i++)
+	{
+		int score = 0;
+		if (possible[i]->x == 0)
+		{
+			if (possible[i]->y == 0 || possible[i]->y == 7)
+			{
+				score += 1;
+			}
+			if (possible[i]->y == 1 || possible[i]->y == 6)
+			{
+				score -= 1;
+			}
+		}
+		if (possible[i]->x == 7)
+		{
+			if (possible[i]->y == 0 || possible[i]->y == 7)
+			{
+				score += 1;
+			}
+			if (possible[i]->y == 1 || possible[i]->y == 6)
+			{
+				score -= 1;
+			}
+		}
+		if (possible[i]->x == 1)
+		{
+			if (possible[i]->y == 0 || possible[i]->y == 7)
+			{
+				score -= 1;
+			}
+			if (possible[i]->y == 1 || possible[i]->y == 6)
+			{
+				score -= 1;
+			}
+		}	
+		if (possible[i]->x == 6)
+		{
+			if (possible[i]->y == 0 || possible[i]->y == 7)
+			{
+				score -= 1;
+			}
+			if (possible[i]->y == 1 || possible[i]->y == 6)
+			{
+				score -= 1;
+			}
+		}		
+		if (score > maxscore || i == 0)
+		{
+			maxscore = score;
+			themove = possible[i];
+		}
+	}
+
+	board->doMove(themove, myside);
 	return themove;
 }
